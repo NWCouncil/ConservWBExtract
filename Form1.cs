@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.Text.RegularExpressions;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace ConservWBExtract
 {
@@ -59,6 +60,13 @@ namespace ConservWBExtract
             {
                 MessageBox.Show("No Folder Selected", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            // Open up the CSV file for output
+            if (textBox2.Text == "")
+            {
+               MessageBox.Show("No Output File Selected", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            var outfile = new StreamWriter(textBox2.Text);
+
             // First search the files in the parent directory
             foreach (string strFile in Directory.GetFiles(textBox1.Text,"*.*", SearchOption.AllDirectories))
             {
@@ -66,6 +74,44 @@ namespace ConservWBExtract
                 if (match.Success)
                 {
                     // You've found an Excel file...
+                    Excel.Application xlApp = new Excel.Application();
+                    Excel.Workbook xlWB;
+                                      
+                    xlWB = xlApp.Workbooks.Open(strFile);
+                    foreach (Excel._Worksheet xlWS in xlWB.Sheets)
+                    {
+                        System.Diagnostics.Debug.WriteLine(xlWS.Name);
+                        if (xlWS.Name.ToUpper() == "FORRPM")
+                        {
+                            String firstColValue = "NotEmpty";
+                            Int16 i = 3;
+                            while (firstColValue != "")
+                            {
+                                firstColValue = xlWS.Cells[i, 1].Value;
+                                i++;
+                            }
+                            Excel.Range xlRng = xlWS.get_Range(xlWS.Cells[3, 1], xlWS.Cells[i, 53]);
+                            bool firstcol = true;
+                            foreach (Excel.Range row in xlRng.Rows)
+                            {
+                                for (int j = 1; j < row.Columns.Count; j++)
+                                {
+                                    if (firstcol)
+                                    {
+                                        outfile.Write(row.Cells[1, j].Value2);
+                                    }
+                                    else
+                                    {
+                                        outfile.Write(row.Cells[1, j].Value2);
+                                        outfile.Write(", ");
+                                    }
+                                    firstcol = false;
+                                }
+                                outfile.WriteLine();
+                            }
+                        }
+                    }
+                    
                     System.Diagnostics.Debug.WriteLine(strFile);
                 }
             }
