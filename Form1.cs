@@ -67,14 +67,17 @@ namespace ConservWBExtract
             }
             var outfile = new StreamWriter(textBox2.Text);
 
+            // Start Excel
+            Excel.Application xlApp = new Excel.Application();
+
             // First search the files in the parent directory
             foreach (string strFile in Directory.GetFiles(textBox1.Text,"*.*", SearchOption.AllDirectories))
             {
                 Match match = Regex.Match(strFile, @".*\.xls.*", RegexOptions.IgnoreCase);
-                if (match.Success)
+                Match tempfile = Regex.Match(strFile, @"\~\$", RegexOptions.IgnoreCase);
+                if (match.Success & !tempfile.Success)
                 {
                     // You've found an Excel file...
-                    Excel.Application xlApp = new Excel.Application();
                     Excel.Workbook xlWB;
                                       
                     xlWB = xlApp.Workbooks.Open(strFile);
@@ -85,27 +88,26 @@ namespace ConservWBExtract
                         {
                             String firstColValue = "NotEmpty";
                             Int16 i = 3;
-                            while (firstColValue != "")
+                            while (firstColValue != null)
                             {
                                 firstColValue = xlWS.Cells[i, 1].Value;
                                 i++;
                             }
-                            Excel.Range xlRng = xlWS.get_Range(xlWS.Cells[3, 1], xlWS.Cells[i, 53]);
-                            bool firstcol = true;
+                            Excel.Range xlRng = xlWS.get_Range((Excel.Range)xlWS.Cells[3, 1], (Excel.Range)xlWS.Cells[i-2, 53]);
                             foreach (Excel.Range row in xlRng.Rows)
                             {
                                 for (int j = 1; j < row.Columns.Count; j++)
                                 {
-                                    if (firstcol)
+                                    //System.Diagnostics.Debug.Write(row.Cells[1, j].Value2);
+                                    if (row.Cells[1, j].Value2 != null)
                                     {
                                         outfile.Write(row.Cells[1, j].Value2);
                                     }
                                     else
                                     {
-                                        outfile.Write(row.Cells[1, j].Value2);
-                                        outfile.Write(", ");
+                                        outfile.Write("NA");
                                     }
-                                    firstcol = false;
+                                    outfile.Write(", ");
                                 }
                                 outfile.WriteLine();
                             }
@@ -115,6 +117,8 @@ namespace ConservWBExtract
                     System.Diagnostics.Debug.WriteLine(strFile);
                 }
             }
+            outfile.Close();
+            xlApp.Quit();
             this.Visible = true;
         }
     }

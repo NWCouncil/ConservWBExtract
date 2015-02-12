@@ -44,7 +44,7 @@
             this.btnBrowse.Location = new System.Drawing.Point(447, 31);
             this.btnBrowse.Name = "btnBrowse";
             this.btnBrowse.Size = new System.Drawing.Size(75, 23);
-            this.btnBrowse.TabIndex = 0;
+            this.btnBrowse.TabIndex = 4;
             this.btnBrowse.Text = "Browse";
             this.btnBrowse.UseVisualStyleBackColor = true;
             this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
@@ -54,7 +54,7 @@
             this.btnRun.Location = new System.Drawing.Point(47, 128);
             this.btnRun.Name = "btnRun";
             this.btnRun.Size = new System.Drawing.Size(75, 23);
-            this.btnRun.TabIndex = 2;
+            this.btnRun.TabIndex = 3;
             this.btnRun.Text = "Run!";
             this.btnRun.UseVisualStyleBackColor = true;
             this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
@@ -82,7 +82,7 @@
             this.btnFileName.Location = new System.Drawing.Point(447, 78);
             this.btnFileName.Name = "btnFileName";
             this.btnFileName.Size = new System.Drawing.Size(75, 23);
-            this.btnFileName.TabIndex = 6;
+            this.btnFileName.TabIndex = 5;
             this.btnFileName.Text = "Browse";
             this.btnFileName.UseVisualStyleBackColor = true;
             this.btnFileName.Click += new System.EventHandler(this.btnFileName_Click);
@@ -93,7 +93,7 @@
             this.textBox2.Location = new System.Drawing.Point(47, 81);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(394, 20);
-            this.textBox2.TabIndex = 4;
+            this.textBox2.TabIndex = 2;
             this.textBox2.Text = global::ConservWBExtract.Properties.Settings.Default.LastFile;
             // 
             // textBox1
