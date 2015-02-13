@@ -80,7 +80,8 @@ namespace ConservWBExtract
                     // You've found an Excel file...
                     Excel.Workbook xlWB;
                                       
-                    xlWB = xlApp.Workbooks.Open(strFile);
+                    xlWB = xlApp.Workbooks.Open(strFile, ReadOnly: true);
+                    bool firstRPMWB = true;
                     foreach (Excel._Worksheet xlWS in xlWB.Sheets)
                     {
                         System.Diagnostics.Debug.WriteLine(xlWS.Name);
@@ -93,12 +94,19 @@ namespace ConservWBExtract
                                 firstColValue = xlWS.Cells[i, 1].Value;
                                 i++;
                             }
-                            Excel.Range xlRng = xlWS.get_Range((Excel.Range)xlWS.Cells[3, 1], (Excel.Range)xlWS.Cells[i-2, 53]);
+                            if (firstRPMWB)
+                            {
+                                Excel.Range xlRng = xlWS.get_Range((Excel.Range)xlWS.Cells[1, 1], (Excel.Range)xlWS.Cells[i - 2, 57]);
+                                firstRPMWB = false;
+                            }
+                            else
+                            {
+                                Excel.Range xlRng = xlWS.get_Range((Excel.Range)xlWS.Cells[3, 1], (Excel.Range)xlWS.Cells[i - 2, 57]);
+                            }
                             foreach (Excel.Range row in xlRng.Rows)
                             {
                                 for (int j = 1; j < row.Columns.Count; j++)
                                 {
-                                    //System.Diagnostics.Debug.Write(row.Cells[1, j].Value2);
                                     if (row.Cells[1, j].Value2 != null)
                                     {
                                         outfile.Write(row.Cells[1, j].Value2);
@@ -113,8 +121,6 @@ namespace ConservWBExtract
                             }
                         }
                     }
-                    
-                    System.Diagnostics.Debug.WriteLine(strFile);
                 }
             }
             outfile.Close();
