@@ -71,6 +71,7 @@ namespace ConservWBExtract
             Excel.Application xlApp = new Excel.Application();
 
             // First search the files in the parent directory
+            bool firstRPMWB = true;
             foreach (string strFile in Directory.GetFiles(textBox1.Text,"*.*", SearchOption.AllDirectories))
             {
                 Match match = Regex.Match(strFile, @".*\.xls.*", RegexOptions.IgnoreCase);
@@ -81,7 +82,6 @@ namespace ConservWBExtract
                     Excel.Workbook xlWB;
                                       
                     xlWB = xlApp.Workbooks.Open(strFile, ReadOnly: true);
-                    bool firstRPMWB = true;
                     foreach (Excel._Worksheet xlWS in xlWB.Sheets)
                     {
                         System.Diagnostics.Debug.WriteLine(xlWS.Name);
@@ -94,14 +94,15 @@ namespace ConservWBExtract
                                 firstColValue = xlWS.Cells[i, 1].Value;
                                 i++;
                             }
+                            Excel.Range xlRng;
                             if (firstRPMWB)
                             {
-                                Excel.Range xlRng = xlWS.get_Range((Excel.Range)xlWS.Cells[1, 1], (Excel.Range)xlWS.Cells[i - 2, 57]);
+                                xlRng = xlWS.get_Range((Excel.Range)xlWS.Cells[1, 1], (Excel.Range)xlWS.Cells[i - 2, 57]);
                                 firstRPMWB = false;
                             }
                             else
                             {
-                                Excel.Range xlRng = xlWS.get_Range((Excel.Range)xlWS.Cells[3, 1], (Excel.Range)xlWS.Cells[i - 2, 57]);
+                                xlRng = xlWS.get_Range((Excel.Range)xlWS.Cells[3, 1], (Excel.Range)xlWS.Cells[i - 2, 57]);
                             }
                             foreach (Excel.Range row in xlRng.Rows)
                             {
@@ -121,6 +122,7 @@ namespace ConservWBExtract
                             }
                         }
                     }
+                    xlWB.Close(SaveChanges: false);
                 }
             }
             outfile.Close();
