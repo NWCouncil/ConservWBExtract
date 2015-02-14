@@ -66,6 +66,7 @@ namespace ConservWBExtract
                MessageBox.Show("No Output File Selected", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             var outfile = new StreamWriter(textBox2.Text);
+            var logfile = new StreamWriter(textBox3.Text);
 
             // Start Excel
             Excel.Application xlApp = new Excel.Application();
@@ -87,6 +88,8 @@ namespace ConservWBExtract
                         System.Diagnostics.Debug.WriteLine(xlWS.Name);
                         if (xlWS.Name.ToUpper() == "FORRPM")
                         {
+                            logfile.Write(strFile);
+                            logfile.WriteLine();
                             String firstColValue = "NotEmpty";
                             Int16 i = 3;
                             while (firstColValue != null)
@@ -123,9 +126,12 @@ namespace ConservWBExtract
                         }
                     }
                     xlWB.Close(SaveChanges: false);
+                    outfile.Flush();
+                    logfile.Flush();
                 }
             }
             outfile.Close();
+            logfile.Close();
             xlApp.Quit();
             this.Visible = true;
         }
