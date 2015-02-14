@@ -129,5 +129,42 @@ namespace ConservWBExtract
             xlApp.Quit();
             this.Visible = true;
         }
+        private void textBox1_Validating(object sender, CancelEventArgs e)
+        {
+            if (textBox1.Text != "")
+            {
+                Properties.Settings.Default["LastFolder"] = textBox1.Text;
+            }
+        }
+
+        private void textBox2_Validating(object sender, CancelEventArgs e)
+        {
+            Match match = Regex.Match(textBox2.Text, @".*\.csv$", RegexOptions.IgnoreCase);
+            if (!match.Success)
+            {
+                textBox2.Text = textBox2.Text + ".csv";
+            }
+            if (textBox3.Text == "")
+            {
+                textBox3.Text = textBox2.Text.Replace(".csv", ".log");
+            }
+            if (textBox2.Text != "")
+            {
+                Properties.Settings.Default["LastFile"] = textBox2.Text;
+            }
+        }
+
+        private void textBox3_Validating(object sender, CancelEventArgs e)
+        {
+            if (textBox3.Text != "")
+            {
+                Properties.Settings.Default["LastLog"] = textBox3.Text;
+            }
+        }
+
+        private void Form1_Deactivate(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.Save();
+        }
     }
 }
