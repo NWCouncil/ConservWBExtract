@@ -46,5 +46,17 @@ namespace ConservWBExtract.Properties {
                 this["LastFile"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LastLog {
+            get {
+                return ((string)(this["LastLog"]));
+            }
+            set {
+                this["LastLog"] = value;
+            }
+        }
     }
 }

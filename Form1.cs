@@ -66,6 +66,7 @@ namespace ConservWBExtract
                MessageBox.Show("No Output File Selected", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             var outfile = new StreamWriter(textBox2.Text);
+            var logfile = new StreamWriter(textBox3.Text);
 
             // Start Excel
             Excel.Application xlApp = new Excel.Application();
@@ -87,6 +88,8 @@ namespace ConservWBExtract
                         System.Diagnostics.Debug.WriteLine(xlWS.Name);
                         if (xlWS.Name.ToUpper() == "FORRPM")
                         {
+                            logfile.Write(strFile);
+                            logfile.WriteLine();
                             String firstColValue = "NotEmpty";
                             Int16 i = 3;
                             while (firstColValue != null)
@@ -123,11 +126,51 @@ namespace ConservWBExtract
                         }
                     }
                     xlWB.Close(SaveChanges: false);
+                    outfile.Flush();
+                    logfile.Flush();
                 }
             }
             outfile.Close();
+            logfile.Close();
             xlApp.Quit();
             this.Visible = true;
+        }
+        private void textBox1_Validating(object sender, CancelEventArgs e)
+        {
+            if (textBox1.Text != "")
+            {
+                Properties.Settings.Default["LastFolder"] = textBox1.Text;
+            }
+        }
+
+        private void textBox2_Validating(object sender, CancelEventArgs e)
+        {
+            Match match = Regex.Match(textBox2.Text, @".*\.csv$", RegexOptions.IgnoreCase);
+            if (!match.Success)
+            {
+                textBox2.Text = textBox2.Text + ".csv";
+            }
+            if (textBox3.Text == "")
+            {
+                textBox3.Text = textBox2.Text.Replace(".csv", ".log");
+            }
+            if (textBox2.Text != "")
+            {
+                Properties.Settings.Default["LastFile"] = textBox2.Text;
+            }
+        }
+
+        private void textBox3_Validating(object sender, CancelEventArgs e)
+        {
+            if (textBox3.Text != "")
+            {
+                Properties.Settings.Default["LastLog"] = textBox3.Text;
+            }
+        }
+
+        private void Form1_Deactivate(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.Save();
         }
     }
 }
