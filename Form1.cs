@@ -111,15 +111,27 @@ namespace ConservWBExtract
                             {
                                 for (int j = 1; j < row.Columns.Count; j++)
                                 {
+                                    string writeVal = row.Cells[1, j].Text;
+                                    double numVal;
+                                    bool isNum = double.TryParse(writeVal, out numVal);
                                     if (row.Cells[1, j].Value2 != null)
                                     {
-                                        outfile.Write(row.Cells[1, j].Value2);
+                                        if (!isNum)
+                                        {
+                                            outfile.Write("\"");
+                                            outfile.Write(writeVal);
+                                            outfile.Write("\"");
+                                        }
+                                        else
+                                        {
+                                            outfile.Write(row.Cells[1, j].Value2);
+                                        }
                                     }
                                     else
                                     {
                                         outfile.Write("NA");
                                     }
-                                    outfile.Write(", ");
+                                    outfile.Write(",");
                                 }
                                 outfile.WriteLine();
                             }
