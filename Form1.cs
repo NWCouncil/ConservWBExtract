@@ -100,12 +100,12 @@ namespace ConservWBExtract
                             Excel.Range xlRng;
                             if (firstRPMWB)
                             {
-                                xlRng = xlWS.get_Range((Excel.Range)xlWS.Cells[1, 1], (Excel.Range)xlWS.Cells[i - 2, 57]);
+                                xlRng = xlWS.get_Range((Excel.Range)xlWS.Cells[1, 1], (Excel.Range)xlWS.Cells[i - 2, 58]);
                                 firstRPMWB = false;
                             }
                             else
                             {
-                                xlRng = xlWS.get_Range((Excel.Range)xlWS.Cells[3, 1], (Excel.Range)xlWS.Cells[i - 2, 57]);
+                                xlRng = xlWS.get_Range((Excel.Range)xlWS.Cells[3, 1], (Excel.Range)xlWS.Cells[i - 2, 58]);
                             }
                             foreach (Excel.Range row in xlRng.Rows)
                             {
